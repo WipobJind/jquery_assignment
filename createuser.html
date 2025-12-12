@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Management Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+  <style>
+    body {
+      background-color: #e0e0e0;
+      font-family: Arial, sans-serif;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 50px auto;
+      padding: 20px;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin-bottom: 30px;
+      color: #333;
+    }
+    
+    .user-table {
+      background-color: white;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    
+    .table-header {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      padding: 15px;
+      background-color: #f5f5f5;
+      border-radius: 5px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    
+    .user-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      padding: 15px;
+      background-color: #f9f9f9;
+      border-radius: 5px;
+      margin-bottom: 10px;
+    }
+    
+    .btn-new-user {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    
+    .btn-new-user:hover {
+      background-color: #0056b3;
+    }
+    
+    .modal-content {
+      border-radius: 15px;
+    }
+    
+    .modal-header {
+      border-bottom: none;
+      padding: 20px 30px 10px;
+    }
+    
+    .modal-title {
+      font-size: 1.5rem;
+      font-weight: normal;
+      color: #666;
+    }
+    
+    .btn-close {
+      font-size: 1.5rem;
+    }
+    
+    .modal-body {
+      padding: 20px 30px 30px;
+    }
+    
+    .form-label {
+      color: #999;
+      font-size: 0.9rem;
+      margin-bottom: 5px;
+    }
+    
+    .form-control {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 10px 15px;
+      margin-bottom: 20px;
+    }
+    
+    .form-control:focus {
+      border-color: #80bdff;
+      box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+    
+    .btn-add-user {
+      background-color: #28a745;
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      float: right;
+      transition: background-color 0.3s;
+    }
+    
+    .btn-add-user:hover {
+      background-color: #218838;
+    }
+    
+    .delete-icon {
+      background-color: #ff4444;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+    
+    .delete-icon:hover {
+      background-color: #cc0000;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>User List</h1>
+    
+    <div class="user-table">
+      <div class="table-header">
+        <div>Username</div>
+        <div>Fullname</div>
+        <div>Email</div>
+      </div>
+      
+      <div id="userList">
+        <!-- User rows will be dynamically added here -->
+      </div>
+    </div>
+    
+    <button id="newUserBtn" class="btn-new-user">New User</button>
+  </div>
+
+  <!-- Modal Dialog -->
+  <div class="modal fade" id="newUserModal" tabindex="-1" role="dialog" aria-labelledby="newUserModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="newUserModalLabel">New User</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="newUserForm">
+            <div class="mb-3">
+              <label for="username" class="form-label">Username</label>
+              <input type="text" class="form-control" id="username" required>
+            </div>
+            <div class="mb-3">
+              <label for="fullname" class="form-label">Fullname</label>
+              <input type="text" class="form-control" id="fullname" required>
+            </div>
+            <div class="mb-3">
+              <label for="email" class="form-label">Email</label>
+              <input type="email" class="form-control" id="email" required>
+            </div>
+            <button type="submit" class="btn-add-user">Add User</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      
+      // Array to store users
+      let users = [];
+      
+      // Configure modal settings using jQuery
+      $('#newUserModal').modal({
+        backdrop: 'static',
+        keyboard: false
+      });
+      
+      // Function to render user list
+      function renderUsers() {
+        const userList = $('#userList');
+        userList.empty();
+        
+        users.forEach(function(user, index) {
+          const userRow = $('<div></div>').addClass('user-row');
+          userRow.html(`
+            <div>${user.username}</div>
+            <div>${user.fullname}</div>
+            <div>${user.email}</div>
+          `);
+          userList.append(userRow);
+        });
+      }
+      
+      // Open modal when "New User" button is clicked using jQuery .on()
+      $('#newUserBtn').on('click', function(event) {
+        console.log('Opening new user modal...');
+        $('#newUserModal').modal('show');
+      });
+      
+      // Handle form submission using jQuery .on()
+      $('#newUserForm').on('submit', function(event) {
+        event.preventDefault();
+        
+        // Get form values
+        const username = $('#username').val().trim();
+        const fullname = $('#fullname').val().trim();
+        const email = $('#email').val().trim();
+        
+        // Validate inputs
+        if (username && fullname && email) {
+          // Create new user object
+          const newUser = {
+            username: username,
+            fullname: fullname,
+            email: email
+          };
+          
+          // Add user to array
+          users.push(newUser);
+          
+          // Render updated user list
+          renderUsers();
+          
+          // Clear form
+          $('#newUserForm')[0].reset();
+          
+          // Close modal using jQuery modal method
+          $('#newUserModal').modal('hide');
+          
+          console.log('User added successfully:', newUser);
+        }
+      });
+      
+      // Initial render (empty list)
+      renderUsers();
+      
+    });
+  </script>
+</body>
+</html>
