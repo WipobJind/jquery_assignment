@@ -99,7 +99,6 @@
   <script>
     $(document).ready(function() {
       
-      // Function to validate empty fields
       function validateEmptyField(fieldId, errorId) {
         const field = $('#' + fieldId);
         const error = $('#' + errorId);
@@ -115,7 +114,6 @@
         }
       }
       
-      // Function to validate topics (at least one must be checked)
       function validateTopics() {
         const checkedTopics = $('.topic:checked').length;
         const error = $('#topicsError');
@@ -129,7 +127,6 @@
         }
       }
       
-      // Function to validate gender selection
       function validateGender() {
         const gender = $('#gender');
         const error = $('#genderError');
@@ -143,7 +140,6 @@
         }
       }
       
-      // Function to validate password match
       function validatePasswordMatch() {
         const password = $('#password');
         const confirmPassword = $('#confirmPassword');
@@ -160,11 +156,9 @@
         }
       }
       
-      // Submit button click event using .on()
       $('#submitBtn').on('click', function(event) {
         event.preventDefault();
         
-        // Validate all fields EXCEPT password match first
         const isUsernameValid = validateEmptyField('username', 'usernameError');
         const isEmailValid = validateEmptyField('email', 'emailError');
         const isPasswordValid = validateEmptyField('password', 'passwordError');
@@ -172,22 +166,18 @@
         const isTopicsValid = validateTopics();
         const isGenderValid = validateGender();
         
-        // Check password match ONLY when clicking Submit button (as per requirements)
         let isPasswordMatchValid = true;
         if (isPasswordValid && isConfirmPasswordValid) {
           isPasswordMatchValid = validatePasswordMatch();
         }
         
-        // Check if all validations pass
         if (isUsernameValid && isEmailValid && isPasswordValid && 
             isConfirmPasswordValid && isTopicsValid && isGenderValid && 
             isPasswordMatchValid) {
           alert('Form submitted successfully!');
-          // You can add form submission logic here
         }
       });
       
-      // Real-time validation on blur for text fields using .on()
       $('#username').on('blur', function(event) {
         validateEmptyField('username', 'usernameError');
       });
@@ -204,12 +194,10 @@
         validateEmptyField('confirmPassword', 'confirmPasswordError');
       });
       
-      // Real-time validation for topics using .on()
       $('.topic').on('change', function(event) {
         validateTopics();
       });
       
-      // Real-time validation for gender using .on()
       $('#gender').on('change', function(event) {
         validateGender();
       });

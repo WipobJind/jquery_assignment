@@ -150,14 +150,12 @@
       </div>
       
       <div id="userList">
-        <!-- User rows will be dynamically added here -->
       </div>
     </div>
     
     <button id="newUserBtn" class="btn-new-user">New User</button>
   </div>
 
-  <!-- Modal Dialog -->
   <div class="modal fade" id="newUserModal" tabindex="-1" role="dialog" aria-labelledby="newUserModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
@@ -190,16 +188,13 @@
   <script>
     $(document).ready(function() {
       
-      // Array to store users
       let users = [];
       
-      // Configure modal settings using jQuery
       $('#newUserModal').modal({
         backdrop: 'static',
         keyboard: false
       });
       
-      // Function to render user list
       function renderUsers() {
         const userList = $('#userList');
         userList.empty();
@@ -215,47 +210,37 @@
         });
       }
       
-      // Open modal when "New User" button is clicked using jQuery .on()
       $('#newUserBtn').on('click', function(event) {
         console.log('Opening new user modal...');
         $('#newUserModal').modal('show');
       });
       
-      // Handle form submission using jQuery .on()
       $('#newUserForm').on('submit', function(event) {
         event.preventDefault();
         
-        // Get form values
         const username = $('#username').val().trim();
         const fullname = $('#fullname').val().trim();
         const email = $('#email').val().trim();
         
-        // Validate inputs
         if (username && fullname && email) {
-          // Create new user object
           const newUser = {
             username: username,
             fullname: fullname,
             email: email
           };
           
-          // Add user to array
           users.push(newUser);
           
-          // Render updated user list
           renderUsers();
           
-          // Clear form
           $('#newUserForm')[0].reset();
           
-          // Close modal using jQuery modal method
           $('#newUserModal').modal('hide');
           
           console.log('User added successfully:', newUser);
         }
       });
       
-      // Initial render (empty list)
       renderUsers();
       
     });
